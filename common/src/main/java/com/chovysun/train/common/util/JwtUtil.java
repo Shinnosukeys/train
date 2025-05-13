@@ -1,4 +1,4 @@
-package com.chovysun.train.gateway.util;
+package com.chovysun.train.common.util;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
@@ -42,9 +42,10 @@ public class JwtUtil {
     }
 
     public static boolean validate(String token) {
+        LOG.info("开始JWT token校验，token：{}", token);
+        GlobalBouncyCastleProvider.setUseBouncyCastle(false);
+
         try {
-            LOG.info("开始JWT token校验，token：{}", token);
-            GlobalBouncyCastleProvider.setUseBouncyCastle(false);
             JWT jwt = JWTUtil.parseToken(token).setKey(key.getBytes());
             // validate包含了verify
             boolean validate = jwt.validate(0);
@@ -57,7 +58,6 @@ public class JwtUtil {
     }
 
     public static JSONObject getJSONObject(String token) {
-        // TODO 先校验token
         GlobalBouncyCastleProvider.setUseBouncyCastle(false);
         JWT jwt = JWTUtil.parseToken(token).setKey(key.getBytes());
         JSONObject payloads = jwt.getPayloads();

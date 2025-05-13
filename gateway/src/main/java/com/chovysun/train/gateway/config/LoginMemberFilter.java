@@ -24,6 +24,7 @@ public class LoginMemberFilter implements Ordered, GlobalFilter {
         if (path.contains("/admin")
                 || path.contains("/redis")
                 || path.contains("/hello")
+                || path.contains("/member/member/register")
                 || path.contains("/member/member/login")
                 || path.contains("/member/member/send-code")
                 || path.contains("/business/kaptcha")) {
@@ -42,6 +43,7 @@ public class LoginMemberFilter implements Ordered, GlobalFilter {
         }
 
         // 校验token是否有效，包括token是否被改过，是否过期
+        // TODO 限制单个用户单位时间内的请求
         boolean validate = JwtUtil.validate(token);
         if (validate) {
             LOG.info("token有效，放行该请求");

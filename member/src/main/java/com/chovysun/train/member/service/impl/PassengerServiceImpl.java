@@ -75,7 +75,7 @@ public class PassengerServiceImpl extends ServiceImpl<PassengerMapper, Passenger
 
     @Override
     public void delete(Long id) {
-
+        removeById(id);
     }
 
     @Override

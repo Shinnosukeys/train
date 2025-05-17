@@ -3,6 +3,7 @@ package com.chovysun.train.business.controller.admin;
 import com.chovysun.train.business.req.TrainQueryReq;
 import com.chovysun.train.business.req.TrainSaveReq;
 import com.chovysun.train.business.resp.TrainQueryResp;
+import com.chovysun.train.business.service.ITrainSeatService;
 import com.chovysun.train.business.service.ITrainService;
 import com.chovysun.train.common.resp.CommonResp;
 import com.chovysun.train.common.resp.PageResp;
@@ -19,8 +20,8 @@ public class TrainAdminController {
     @Resource
     private ITrainService trainService;
 
-//    @Resource
-//    private TrainSeatService trainSeatService;
+    @Resource
+    private ITrainSeatService trainSeatService;
 
     @PostMapping("/save")
     public CommonResp<Object> save(@Valid @RequestBody TrainSaveReq req) {
@@ -46,10 +47,9 @@ public class TrainAdminController {
         return new CommonResp<>(list);
     }
 
-//    @GetMapping("/gen-seat/{trainCode}")
-//    public CommonResp<Object> genSeat(@PathVariable String trainCode) {
-//        trainSeatService.genTrainSeat(trainCode);
-//        return new CommonResp<>();
-//    }
-
+    @GetMapping("/gen-seat/{trainCode}")
+    public CommonResp<Object> genSeat(@PathVariable String trainCode) {
+        trainSeatService.genTrainSeat(trainCode);
+        return new CommonResp<>();
+    }
 }

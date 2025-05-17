@@ -81,6 +81,14 @@ public class TrainStationServiceImpl extends ServiceImpl<TrainStationMapper, Tra
         // 构建查询条件
         QueryWrapper<TrainStation> queryWrapper = new QueryWrapper<>();
 
+        // 添加排序条件：按车次升序、序号升序（与原逻辑一致）
+        queryWrapper.orderByAsc("train_code", "`index`"); // `index` 加反引号避免关键字问题
+
+        // 添加车次过滤条件（非空时生效）
+        if (ObjectUtil.isNotEmpty(req.getTrainCode())) {
+            queryWrapper.eq("train_code", req.getTrainCode());
+        }
+
         // 分页查询
         Page<TrainStation> page = new Page<>(req.getPage(), req.getSize());
         IPage<TrainStation> trainStationPage = this.page(page, queryWrapper);

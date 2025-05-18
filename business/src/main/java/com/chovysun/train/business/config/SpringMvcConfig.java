@@ -16,18 +16,16 @@ public class SpringMvcConfig implements WebMvcConfigurer {
    @Resource
    MemberInterceptor memberInterceptor;
 
+
    @Override
    public void addInterceptors(InterceptorRegistry registry) {
-       registry.addInterceptor(logInterceptor);
+       registry.addInterceptor(logInterceptor)
+               .addPathPatterns("/**");
 
-       // 路径不要包含context-path
        registry.addInterceptor(memberInterceptor)
-               .addPathPatterns("/**")
-               .excludePathPatterns(
-                       "/hello",
-                       "register",
-                       "/member/send-code",
-                       "/member/login"
-               );
+              .addPathPatterns("/**")
+              .excludePathPatterns(
+                      "/hello"
+              );
    }
 }

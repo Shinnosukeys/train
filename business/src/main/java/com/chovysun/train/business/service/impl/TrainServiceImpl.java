@@ -102,6 +102,8 @@ public class TrainServiceImpl extends ServiceImpl<TrainMapper, Train> implements
 
     @Override
     public List<Train> selectAll() {
-        return null;
+        QueryWrapper<Train> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("code");
+        return trainMapper.selectList(queryWrapper);
     }
 }

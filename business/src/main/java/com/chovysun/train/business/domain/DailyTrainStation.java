@@ -1,5 +1,6 @@
 package com.chovysun.train.business.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ public class DailyTrainStation {
 
     private String trainCode;
 
+    @TableField(value = "`index`")
     private Integer index;
 
     private String name;

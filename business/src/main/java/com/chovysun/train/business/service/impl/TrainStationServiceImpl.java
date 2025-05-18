@@ -118,4 +118,13 @@ public class TrainStationServiceImpl extends ServiceImpl<TrainStationMapper, Tra
 
         return BeanUtil.copyToList(trainStations, TrainStationQueryResp.class);
     }
+
+    @Override
+    public List<TrainStation> selectByTrainCode(String trainCode) {
+        QueryWrapper<TrainStation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("`index`");
+        return trainStationMapper.selectList(queryWrapper);
+    }
+
+
 }

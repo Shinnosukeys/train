@@ -109,7 +109,7 @@ public class TrainCarriageServiceImpl extends ServiceImpl<TrainCarriageMapper, T
     @Override
     public List<TrainCarriage> selectByTrainCode(String trainCode) {
         QueryWrapper<TrainCarriage> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("train_code", trainCode).orderByAsc("`index`");;
+        queryWrapper.eq("train_code", trainCode).orderByAsc("`index`");
         return TrainCarriageMapper.selectList(queryWrapper);
     }
 }

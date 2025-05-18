@@ -1,5 +1,6 @@
 package com.chovysun.train.business.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ public class DailyTrainCarriage {
 
     private String trainCode;
 
+    @TableField(value = "`index`")
     private Integer index;
 
     private String seatType;

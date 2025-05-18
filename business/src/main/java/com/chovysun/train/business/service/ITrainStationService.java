@@ -18,4 +18,6 @@ public interface ITrainStationService extends IService<TrainStation> {
     void delete(Long id);
 
     List<TrainStationQueryResp> queryAll();
+
+    List<TrainStation> selectByTrainCode(String trainCode);
 }

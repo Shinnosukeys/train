@@ -94,7 +94,7 @@ public class TrainSeatServiceImpl extends ServiceImpl<TrainSeatMapper, TrainSeat
     @Override
     public List<TrainSeat> selectByTrainCode(String trainCode) {
         QueryWrapper<TrainSeat> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("train_code", trainCode).orderByAsc("`index`");;
+        queryWrapper.eq("train_code", trainCode).orderByAsc("carriage_index", "carriage_seat_index");;
         return TrainSeatMapper.selectList(queryWrapper);
     }
 

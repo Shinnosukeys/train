@@ -7,10 +7,13 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+
+// http://localhost:8000/business/confirm-order/query-line-count/null
+//请求方法
+//GET
+
 
 @RestController
 @RequestMapping("/confirm-order")
@@ -50,11 +53,11 @@ public class ConfirmOrderController {
 //        return new CommonResp<>(String.valueOf(id));
     }
 
-//    @GetMapping("/query-line-count/{id}")
-//    public CommonResp<Integer> queryLineCount(@PathVariable Long id) {
-//        Integer count = confirmOrderService.queryLineCount(id);
-//        return new CommonResp<>(count);
-//    }
+    @GetMapping("/query-line-count/{id}")
+    public CommonResp<Integer> queryLineCount(@PathVariable Long id) {
+        Integer count = confirmOrderService.queryLineCount(id);
+        return new CommonResp<>(count);
+    }
 //
 //    @GetMapping("/cancel/{id}")
 //    public CommonResp<Integer> cancel(@PathVariable Long id) {

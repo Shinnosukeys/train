@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("ticker")
+@TableName("ticket")
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;

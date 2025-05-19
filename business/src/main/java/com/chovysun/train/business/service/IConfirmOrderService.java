@@ -16,4 +16,6 @@ public interface IConfirmOrderService extends IService<ConfirmOrder>{
     void delete(Long id);
 
     void doConfirm(ConfirmOrderDoReq req);
+
+    Integer queryLineCount(Long id);
 }

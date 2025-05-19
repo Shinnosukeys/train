@@ -8,6 +8,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -389,6 +390,46 @@ public class ConfirmOrderServiceImpl extends ServiceImpl<ConfirmOrderMapper, Con
             dailyTrainSeat.setSell(newSell);
             return true;
 
+        }
+    }
+
+    /**
+     * 查询前面有几个人在排队
+     * @param id
+     */
+    public Integer queryLineCount(Long id) {
+        ConfirmOrder confirmOrder = confirmOrderMapper.selectById(id);
+        ConfirmOrderStatusEnum statusEnum = EnumUtil.getBy(ConfirmOrderStatusEnum::getCode, confirmOrder.getStatus());
+        int result = switch (statusEnum) {
+            case PENDING -> 0; // 排队0
+            case SUCCESS -> -1; // 成功
+            case FAILURE -> -2; // 失败
+            case EMPTY -> -3; // 无票
+            case CANCEL -> -4; // 取消
+            case INIT -> 999; // 需要查表得到实际排队数量
+        };
+
+        if (result == 999) {
+            // 使用LambdaQueryWrapper构建查询条件
+            LambdaQueryWrapper<ConfirmOrder> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper
+                    // 筛选同一天、同一车次的订单
+                    .eq(ConfirmOrder::getDate, confirmOrder.getDate())
+                    .eq(ConfirmOrder::getTrainCode, confirmOrder.getTrainCode())
+
+                    // 只统计创建时间更早的订单
+                    .lt(ConfirmOrder::getCreateTime, confirmOrder.getCreateTime())
+
+                    // 状态必须是INIT或PENDING
+                    .and(wrapper -> wrapper
+                            .eq(ConfirmOrder::getStatus, ConfirmOrderStatusEnum.INIT.getCode())
+                            .or()
+                            .eq(ConfirmOrder::getStatus, ConfirmOrderStatusEnum.PENDING.getCode())
+                    );
+
+            return Math.toIntExact(confirmOrderMapper.selectCount(queryWrapper));
+        } else {
+            return result;
         }
     }
 }

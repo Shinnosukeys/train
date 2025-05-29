@@ -125,4 +125,19 @@ public class DailyTrainStationServiceImpl extends ServiceImpl<DailyTrainStationM
 
         LOG.info("生成日期【{}】车次【{}】的车站信息结束", DateUtil.formatDate(date), trainCode);
     }
+
+    /**
+     * 按车次查询全部车站
+     */
+    public long countByTrainCode(Date date, String trainCode) {
+        QueryWrapper<DailyTrainStation> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("date", date)
+                .eq("train_code", trainCode);
+
+        long l = dailyTrainStationMapper.selectCount(queryWrapper);
+        if (l == 0L) {
+            return -1;
+        }
+        return l;
+    }
 }

@@ -47,7 +47,6 @@ public class AfterConfirmOrderServiceImpl {
      *  更新确认订单为成功
      */
     // @Transactional
-    // @GlobalTransactional
     public void afterDoConfirm(
             DailyTrainTicket dailyTrainTicket,
             List<DailyTrainSeat> finalSeatList,
@@ -55,7 +54,6 @@ public class AfterConfirmOrderServiceImpl {
             ConfirmOrder confirmOrder
     ) throws Exception {
 
-        // LOG.info("seata全局事务ID: {}", RootContext.getXID());
         for (int j = 0; j < finalSeatList.size(); j++) {
             DailyTrainSeat dailyTrainSeat = finalSeatList.get(j);
 
@@ -151,6 +149,7 @@ public class AfterConfirmOrderServiceImpl {
                     .set("update_time", new Date())
                     .set("status", ConfirmOrderStatusEnum.SUCCESS.getCode());
             confirmOrderMapper.update(null, updateConfirmOrderWrapper);
+
 
             // 模拟调用方出现异常
             // Thread.sleep(10000);

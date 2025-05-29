@@ -15,4 +15,5 @@ public interface IDailyTrainTicketService extends IService<DailyTrainTicket> {
 
     void delete(Long id);
 
+    PageResp<DailyTrainTicketQueryResp> queryList2(DailyTrainTicketQueryReq req);
 }

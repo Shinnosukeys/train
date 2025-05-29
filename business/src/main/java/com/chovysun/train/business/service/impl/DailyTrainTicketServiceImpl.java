@@ -14,6 +14,7 @@ import com.chovysun.train.business.domain.DailyTrain;
 import com.chovysun.train.business.domain.DailyTrainTicket;
 import com.chovysun.train.business.domain.TrainStation;
 import com.chovysun.train.business.enums.SeatTypeEnum;
+import com.chovysun.train.business.enums.TrainTypeEnum;
 import com.chovysun.train.business.mapper.DailyTrainTicketMapper;
 import com.chovysun.train.business.req.DailyTrainTicketQueryReq;
 import com.chovysun.train.business.req.DailyTrainTicketSaveReq;
@@ -24,9 +25,10 @@ import com.chovysun.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.chovysun.train.business.enums.TrainTypeEnum;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -62,7 +64,13 @@ public class DailyTrainTicketServiceImpl extends ServiceImpl<DailyTrainTicketMap
         }
     }
 
+    @CachePut(value = "DailyTrainTicketService.queryList")
+    public PageResp<DailyTrainTicketQueryResp> queryList2(DailyTrainTicketQueryReq req) {
+        return queryList(req);
+    }
+
     @Override
+    @Cacheable(value = "DailyTrainTicketServiceImpl.queryList")
     public PageResp<DailyTrainTicketQueryResp> queryList(DailyTrainTicketQueryReq req) {
         LOG.info("查询页码：{}", req.getPage());
         LOG.info("每页条数：{}", req.getSize());

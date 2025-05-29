@@ -49,6 +49,9 @@ public class DailyTrainServiceImpl extends ServiceImpl<DailyTrainMapper, DailyTr
     @Resource
     private DailyTrainTicketServiceImpl dailyTrainTicketServiceImpl;
 
+    @Resource
+    private SkTokenServiceImpl skTokenServiceImpl;
+
     private static final Logger LOG = LoggerFactory.getLogger(StationServiceImpl.class);
 
     @Override
@@ -151,6 +154,9 @@ public class DailyTrainServiceImpl extends ServiceImpl<DailyTrainMapper, DailyTr
 
         // 生成该车次的余票数据
         dailyTrainTicketServiceImpl.genDailyTrainTicket(dailyTrain, date, train.getCode());
+
+        // 生成令牌余量数据
+        skTokenServiceImpl.genDaily(date, train.getCode());
 
         LOG.info("生成日期【{}】车次【{}】的信息结束", DateUtil.formatDate(date), train.getCode());
     }

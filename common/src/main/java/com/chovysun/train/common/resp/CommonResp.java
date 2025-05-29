@@ -20,11 +20,50 @@ public class CommonResp<T> {
      */
     private T content;
 
-    // 添加带参数的构造函数
+    public CommonResp() {
+    }
+
+    public CommonResp(boolean success, String message, T content) {
+        this.success = success;
+        this.message = message;
+        this.content = content;
+    }
+
     public CommonResp(T content) {
         this.content = content;
     }
 
-    // 保留默认构造函数
-    public CommonResp() {}
+    public boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public T getContent() {
+        return content;
+    }
+
+    public void setContent(T content) {
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("CommonResp{");
+        sb.append("success=").append(success);
+        sb.append(", message='").append(message).append('\'');
+        sb.append(", content=").append(content);
+        sb.append('}');
+        return sb.toString();
+    }
 }

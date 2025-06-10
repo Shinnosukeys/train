@@ -1,8 +1,9 @@
 package com.chovysun.train.business.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class ConfirmOrderMQDto {
+public class ConfirmOrderMQDto implements Serializable {
     /**
      * 日志流程号，用于同转异时，用同一个流水号
      */

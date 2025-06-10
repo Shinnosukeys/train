@@ -1,5 +1,6 @@
 package com.chovysun.train.business.enums;
 
+
 public enum RocketMQTopicEnum {
 
     CONFIRM_ORDER("CONFIRM_ORDER", "确认订单排队");

@@ -15,7 +15,6 @@ import com.chovysun.train.member.mapper.TicketMapper;
 import com.chovysun.train.member.req.TicketQueryReq;
 import com.chovysun.train.member.resp.TicketQueryResp;
 import com.chovysun.train.member.service.ITicketService;
-import io.seata.core.context.RootContext;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +32,6 @@ public class TicketServiceImpl extends ServiceImpl<TicketMapper, Ticket> impleme
     
     @Override
     public void save(MemberTicketReq req) {
-        LOG.info("seata全局事务ID save: {}", RootContext.getXID());
         DateTime dataTime = DateTime.now();
         Ticket ticket = BeanUtil.copyProperties(req, Ticket.class);
         ticket.setId(SnowUtil.getSnowflakeNextId());

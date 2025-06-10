@@ -21,11 +21,14 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+
+import static com.chovysun.train.business.constant.constant.CONFIRM_ORDER_QUEUE;
 
 @Service
 public class BeforeConfirmOrderService {
@@ -43,6 +46,10 @@ public class BeforeConfirmOrderService {
 
     @Resource
     private RedissonClient redissonClient;
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
 
     @SentinelResource(value = "beforeDoConfirm", blockHandler = "beforeDoConfirmBlock")
     public Long beforeDoConfirm(ConfirmOrderDoReq req) {
@@ -86,11 +93,14 @@ public class BeforeConfirmOrderService {
             confirmOrderMQDto.setDate(req.getDate());
             confirmOrderMQDto.setTrainCode(req.getTrainCode());
             confirmOrderMQDto.setLogId(MDC.get("LOG_ID"));
-            String reqJson = JSON.toJSONString(confirmOrderMQDto);
-            // LOG.info("排队购票，发送mq开始，消息：{}", reqJson);
-            // rocketMQTemplate.convertAndSend(RocketMQTopicEnum.CONFIRM_ORDER.getCode(), reqJson);
-            // LOG.info("排队购票，发送mq结束");
-            confirmOrderService.doConfirm(confirmOrderMQDto);
+            //String reqJson = JSON.toJSONString(confirmOrderMQDto);
+
+
+            LOG.info("开始发起异步调用-----------------------------------------------------------------------------------------------------");
+            LOG.info("排队购票，发送mq开始，消息：{}", confirmOrderMQDto);
+            rabbitTemplate.convertAndSend(CONFIRM_ORDER_QUEUE, confirmOrderMQDto);
+            LOG.info("排队购票，发送mq结束");
+//            confirmOrderService.doConfirm(confirmOrderMQDto);
             id = confirmOrder.getId();
         }
         return id;

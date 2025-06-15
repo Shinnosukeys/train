@@ -127,7 +127,7 @@ public class SkTokenServiceImpl extends ServiceImpl<SkTokenMapper, SkToken> impl
                 return false;
             }
             LOG.info("获取令牌后，令牌余数：{}", count);
-            stringRedisTemplate.expire(skTokenCountKey, 60, TimeUnit.SECONDS); // 延长缓存有效期
+            stringRedisTemplate.expire(skTokenCountKey, 600, TimeUnit.SECONDS); // 延长缓存有效期
 
             // 每扣减 N 次同步一次数据库（示例：每 5 次）
             if (count % 5 == 0) {

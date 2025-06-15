@@ -5,8 +5,10 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chovysun.train.business.domain.DailyTrainStation;
@@ -139,5 +141,19 @@ public class DailyTrainStationServiceImpl extends ServiceImpl<DailyTrainStationM
             return -1;
         }
         return l;
+    }
+
+    /**
+     * 按车次日期查询车站列表，用于界面显示一列车经过的车站
+     */
+    @Override
+    public List<DailyTrainStationQueryResp> queryByTrain(Date date, String trainCode) {
+        LambdaQueryWrapper<DailyTrainStation> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(DailyTrainStation::getDate, date)
+                .eq(DailyTrainStation::getTrainCode, trainCode)
+                .orderByAsc(DailyTrainStation::getIndex);  // 假设实体类中有getIndex()方法
+
+        List<DailyTrainStation> list = dailyTrainStationMapper.selectList(wrapper);
+        return BeanUtil.copyToList(list, DailyTrainStationQueryResp.class);
     }
 }

@@ -7,6 +7,9 @@ import com.chovysun.train.business.req.DailyTrainStationSaveReq;
 import com.chovysun.train.business.resp.DailyTrainStationQueryResp;
 import com.chovysun.train.common.resp.PageResp;
 
+import java.util.Date;
+import java.util.List;
+
 public interface IDailyTrainStationService extends IService<DailyTrainStation> {
 
     void save(DailyTrainStationSaveReq req);
@@ -14,4 +17,6 @@ public interface IDailyTrainStationService extends IService<DailyTrainStation> {
     PageResp<DailyTrainStationQueryResp> queryList(DailyTrainStationQueryReq req);
 
     void delete(Long id);
+
+    List<DailyTrainStationQueryResp> queryByTrain(Date date, String trainCode);
 }

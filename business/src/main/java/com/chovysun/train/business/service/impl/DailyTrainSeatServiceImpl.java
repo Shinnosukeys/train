@@ -6,8 +6,10 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chovysun.train.business.domain.DailyTrainSeat;
@@ -16,7 +18,9 @@ import com.chovysun.train.business.domain.TrainStation;
 import com.chovysun.train.business.mapper.DailyTrainSeatMapper;
 import com.chovysun.train.business.req.DailyTrainSeatQueryReq;
 import com.chovysun.train.business.req.DailyTrainSeatSaveReq;
+import com.chovysun.train.business.req.SeatSellReq;
 import com.chovysun.train.business.resp.DailyTrainSeatQueryResp;
+import com.chovysun.train.business.resp.SeatSellResp;
 import com.chovysun.train.business.service.IDailyTrainSeatService;
 import com.chovysun.train.business.service.ITrainSeatService;
 import com.chovysun.train.business.service.ITrainStationService;
@@ -161,5 +165,23 @@ public class DailyTrainSeatServiceImpl extends ServiceImpl<DailyTrainSeatMapper,
                 eq("carriage_index", carriageIndex).
                 orderByAsc("carriage_seat_index");
         return dailyTrainSeatMapper.selectList(queryWrapper);
+    }
+
+    /**
+     * 查询某日某车次的所有座位
+     */
+    @Override
+    public List<SeatSellResp> querySeatSell(SeatSellReq req) {
+        Date date = req.getDate();
+        String trainCode = req.getTrainCode();
+        LOG.info("查询日期【{}】车次【{}】的座位销售信息", DateUtil.formatDate(date), trainCode);
+
+        LambdaQueryWrapper<DailyTrainSeat> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(DailyTrainSeat::getDate, date)
+                .eq(DailyTrainSeat::getTrainCode, trainCode)
+                .orderByAsc(DailyTrainSeat::getCarriageIndex, DailyTrainSeat::getCarriageSeatIndex);
+
+        List<DailyTrainSeat> seatList = dailyTrainSeatMapper.selectList(wrapper);
+        return BeanUtil.copyToList(seatList, SeatSellResp.class);
     }
 }

@@ -20,6 +20,7 @@ import com.chovysun.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,9 @@ public class SkTokenServiceImpl extends ServiceImpl<SkTokenMapper, SkToken> impl
 
     @Resource
     private StringRedisTemplate stringRedisTemplate;
+
+    @Value("${spring.profiles.active}")
+    private String env;
 
 
     private static final Logger LOG = LoggerFactory.getLogger(SkTokenServiceImpl.class);
@@ -102,17 +106,17 @@ public class SkTokenServiceImpl extends ServiceImpl<SkTokenMapper, SkToken> impl
 
         // TODO 缺乏用户级别的防刷策略
         // 需要去掉这段，否则发布生产后，体验多人排队功能时，会因拿不到锁而返回：等待5秒，加入20人时，只有第1次循环能拿到锁
-        // if (!env.equals("dev")) {
-        //     // 先获取令牌锁，再校验令牌余量，防止机器人抢票，lockKey就是令牌，用来表示【谁能做什么】的一个凭证
-        //     String lockKey = RedisKeyPreEnum.SK_TOKEN + "-" + DateUtil.formatDate(date) + "-" + trainCode + "-" + memberId;
-        //     Boolean setIfAbsent = redisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 5, TimeUnit.SECONDS);
-        //     if (Boolean.TRUE.equals(setIfAbsent)) {
-        //         LOG.info("恭喜，抢到令牌锁了！lockKey：{}", lockKey);
-        //     } else {
-        //         LOG.info("很遗憾，没抢到令牌锁！lockKey：{}", lockKey);
-        //         return false;
-        //     }
-        // }
+         if (!env.equals("dev")) {
+             // 先获取令牌锁，再校验令牌余量，防止机器人抢票，lockKey就是令牌，用来表示【谁能做什么】的一个凭证
+             String lockKey = RedisKeyPreEnum.SK_TOKEN + "-" + DateUtil.formatDate(date) + "-" + trainCode + "-" + memberId;
+             Boolean setIfAbsent = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, lockKey, 5, TimeUnit.SECONDS);
+             if (Boolean.TRUE.equals(setIfAbsent)) {
+                 LOG.info("恭喜，抢到令牌锁了！lockKey：{}", lockKey);
+             } else {
+                 LOG.info("很遗憾，没抢到令牌锁！lockKey：{}", lockKey);
+                 return false;
+             }
+         }
 
         // 构建 Redis 键
         String skTokenCountKey = RedisKeyPreEnum.SK_TOKEN_COUNT + "-" + DateUtil.formatDate(date) + "-" + trainCode;

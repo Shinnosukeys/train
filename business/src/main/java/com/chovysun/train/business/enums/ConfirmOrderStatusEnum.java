@@ -4,8 +4,11 @@ public enum ConfirmOrderStatusEnum {
 
     INIT("I", "初始"),
     PENDING("P", "处理中"),
-    SUCCESS("S", "成功"),
-    FAILURE("F", "失败"),
+    SUCCESS("S", "下单成功"),
+    FAILURE("F", "下单失败"),
+    SUCCESS_PAY("S", "支付成功"),
+    FAILURE_PAY("F", "支付失败"),
+
     EMPTY("E", "无票"),
     CANCEL("C", "取消");
 
